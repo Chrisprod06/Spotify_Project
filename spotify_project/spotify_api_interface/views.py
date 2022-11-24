@@ -64,7 +64,7 @@ def view_artist_details(request, artist_id):
     try:
         url = f"https://api.spotify.com/v1/artists/"
 
-        response = httpx.get(url, params={"id":artist_id})
+        response = httpx.get(url, params={"id": artist_id})
         artist_data = response.json()
 
     except httpx.TimeoutException as error:
