@@ -3,6 +3,7 @@ import httpx
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
+from .functions import auth_spotify
 from .forms import SearchArtistForm
 
 
@@ -62,11 +63,14 @@ def view_artist_details(request, artist_id):
     artist_data = {}
     print(artist_id)
     try:
-        url = f"https://api.spotify.com/v1/artists/"
-
-        response = httpx.get(url, params={"id": artist_id})
+        access_token = auth_spotify()
+        url = f"https://api.spotify.com/v1/artists/{artist_id}"
+        headers = {
+            "Authorization": f"Bearer {access_token}"
+        }
+        response = httpx.get(url, headers=headers)
         artist_data = response.json()
-
+        
     except httpx.TimeoutException as error:
         print(f"GET artist API timeout error: {error}")
     except httpx.NetworkError as error:
