@@ -61,7 +61,6 @@ def view_artist_details(request, artist_id):
     template = "spotify_api_interface/artist_details.html"
     context = {}
     artist_data = {}
-    print(artist_id)
     try:
         access_token = auth_spotify()
         url = f"https://api.spotify.com/v1/artists/{artist_id}"
@@ -70,7 +69,7 @@ def view_artist_details(request, artist_id):
         }
         response = httpx.get(url, headers=headers)
         artist_data = response.json()
-        
+
     except httpx.TimeoutException as error:
         print(f"GET artist API timeout error: {error}")
     except httpx.NetworkError as error:
@@ -78,7 +77,16 @@ def view_artist_details(request, artist_id):
     except Exception as error:
         print(f"GET artist API error: {error}")
 
-    context["artist_data"] = artist_data
+    # Prepare data for template
+    context["artist_data"] = {
+        "url": artist_data.get("external_urls", ""),
+        "followers": artist_data.get("followers", "").get("total", ""),
+        "genres": artist_data.get("genres", []),
+        "id": artist_data.get("id", ""),
+        "image": artist_data.get("images", [])[0].get("url", "") if len(artist_data.get("images", [])) > 1 else "",
+        "name": artist_data.get("name", ""),
+        "popularity": artist_data.get("popularity", 0)
+    }
 
     return render(
         request,
