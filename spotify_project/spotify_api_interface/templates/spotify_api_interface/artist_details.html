@@ -19,6 +19,8 @@
                                      style="max-width: 20rem;">
                             </div>
                             <div class="col-lg-6">
+                               <p>{{ artist_data.name }} has {{ artist_data.followers }} followers and is the {{ artist_data.popularity }} most popular artist on Spotify. {{ artist_data.name }}
+                               genres are consisted of {% for genre in artist_data.genres %} {{ genre }}{% endfor %} </p>
                             </div>
                         </div>
                     </div>
