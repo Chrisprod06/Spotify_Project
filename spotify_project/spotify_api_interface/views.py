@@ -3,7 +3,7 @@ import httpx
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
-from .functions import auth_spotify
+from .functions import auth_spotify, get_artist_data, get_artist_albums
 from .forms import SearchArtistForm
 
 
@@ -52,7 +52,7 @@ def search_artist(request):
 
 def view_artist_details(request, artist_id):
     """
-    View to handle artist details retrieval and display
+    View to handle artist details retrieval and display. Get Artist, Artist's Albums
     :param artist_id:
     :param request:
     :return:
@@ -60,26 +60,16 @@ def view_artist_details(request, artist_id):
 
     template = "spotify_api_interface/artist_details.html"
     context = {}
-    artist_data = {}
-    try:
-        access_token = auth_spotify()
-        url = f"https://api.spotify.com/v1/artists/{artist_id}"
-        headers = {
-            "Authorization": f"Bearer {access_token}"
-        }
-        response = httpx.get(url, headers=headers)
-        artist_data = response.json()
+    access_token = auth_spotify()
 
-    except httpx.TimeoutException as error:
-        print(f"GET artist API timeout error: {error}")
-    except httpx.NetworkError as error:
-        print(f"GET artist API network error: {error}")
-    except Exception as error:
-        print(f"GET artist API error: {error}")
+    # Get artist data, albums
+    artist_data = get_artist_data(artist_id, access_token)
+    artist_albums = get_artist_albums(artist_id, access_token)
 
+    print(artist_albums)
     # Prepare data for template
     context["artist_data"] = {
-        "url": artist_data.get("external_urls", ""),
+        "url": artist_data.get("external_urls", "").get("spotify", ""),
         "followers": artist_data.get("followers", "").get("total", ""),
         "genres": artist_data.get("genres", []),
         "id": artist_data.get("id", ""),
