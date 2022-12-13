@@ -34,7 +34,7 @@ def get_artist_data(artist_id, access_token):
     :return:
     """
     # Get artist data
-    artist_data = {}
+    clean_artist_data = {}
     try:
         url = f"https://api.spotify.com/v1/artists/{artist_id}"
         headers = {
@@ -43,36 +43,61 @@ def get_artist_data(artist_id, access_token):
         response = httpx.get(url, headers=headers)
         artist_data = response.json()
 
+        clean_artist_data = {
+            "url": artist_data.get("external_urls", "").get("spotify", ""),
+            "followers": artist_data.get("followers", "").get("total", ""),
+            "genres": artist_data.get("genres", []),
+            "id": artist_data.get("id", ""),
+            "image": artist_data.get("images", [])[0].get("url", "") if len(artist_data.get("images", [])) > 1 else "",
+            "name": artist_data.get("name", ""),
+            "popularity": artist_data.get("popularity", 0)
+        }
+
     except httpx.TimeoutException as error:
         print(f"GET artist API timeout error: {error}")
     except httpx.NetworkError as error:
         print(f"GET artist API network error: {error}")
     except Exception as error:
         print(f"GET artist API error: {error}")
-    return artist_data
+    return clean_artist_data
 
 
-def get_artist_albums(artist_id, access_token):
+def get_album_data(artist_id, access_token, number_of_albums):
     """
     Function to get details of an artist albums
+    :param number_of_albums:
     :param artist_id:
     :param access_token:
     :return:
     """
     # Get artist albums
-    artist_albums = {}
+    clean_artist_albums = []
     try:
         url = f"https://api.spotify.com/v1/artists/{artist_id}/albums"
         headers = {
             "Authorization": f"Bearer {access_token}"
         }
-        params = {"limit": 4}
+        params = {"limit": number_of_albums}
         response = httpx.get(url, headers=headers, params=params)
-        artist_albums = response.json()
+        response_data = response.json()
+        print(response_data)
+        # Get items from response_data
+        items = response_data.get("items", [])
+        if items:
+            for item in items:
+                clean_artist_albums.append({
+                    "url": item.get("href", ""),
+                    "image": item.get("images", [])[1].get("url", ""),
+                    "name": item.get("name", ""),
+                    "release_date": item.get("release_date", ""),
+                    "total_tracks": item.get("total_tracks", 0)
+                })
+
+        return clean_artist_albums
     except httpx.TimeoutException as error:
         print(f"GET artist albums API timeout error: {error}")
     except httpx.NetworkError as error:
         print(f"GET artist albums API network error: {error}")
     except Exception as error:
         print(f"GET artist albums API error: {error}")
-    return artist_albums
+    return clean_artist_albums
