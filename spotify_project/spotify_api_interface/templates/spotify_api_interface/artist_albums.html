@@ -5,5 +5,22 @@
 {% endblock %}
 
 {% block CONTENT %}
-{{ album_data }}
+    <div class="container">
+        <div class="row">
+            {% for album in album_data %}
+                <div class="col-lg-3 mt-5">
+                    <div class="card border shadow">
+                        <img src="{{ album.image }}" alt="album cover" class="card-img-top">
+                        <div class="card-body">
+                            <ul class="list-group text-center">
+                                <li class="list-group"><b>{{ album.name }}</b></li>
+                                <li class="list-group">{{ album.release_date }}</li>
+                                <li class="list-group">Tracks: {{ album.total_tracks }}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}

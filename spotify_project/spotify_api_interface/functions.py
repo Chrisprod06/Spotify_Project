@@ -1,3 +1,5 @@
+from math import ceil
+
 import httpx
 from .secrets import client_secret, client_id
 
@@ -80,15 +82,19 @@ def get_album_data(artist_id, access_token, number_of_albums):
         params = {"limit": number_of_albums}
         response = httpx.get(url, headers=headers, params=params)
         response_data = response.json()
-        print(response_data)
+
         # Get items from response_data
         items = response_data.get("items", [])
+        print(items)
         if items:
             for item in items:
+                album_name = item.get("name", "")
+                # If album name is too big, slice for a cleaner look in html
+                if len(album_name) > 28:
+                    album_name = f"{album_name[0:28]}.."
                 clean_artist_albums.append({
-                    "url": item.get("href", ""),
                     "image": item.get("images", [])[1].get("url", ""),
-                    "name": item.get("name", ""),
+                    "name": album_name,
                     "release_date": item.get("release_date", ""),
                     "total_tracks": item.get("total_tracks", 0)
                 })
