@@ -8,5 +8,6 @@ urlpatterns = [
     path("search_albums", views.search_albums, name="search-albums"),
     path("view_artist_details/<str:artist_id>", views.view_artist_details, name="view-artist-details"),
     path("view_artist_albums/<str:artist_id>/<int:number_of_albums>", views.view_artist_albums,
-         name="view-artist-albums")
+         name="view-artist-albums"),
+    path("album_tracks/<str:album_id>", views.view_album_tracks, name="view-album-tracks")
 ]

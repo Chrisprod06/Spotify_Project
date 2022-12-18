@@ -85,7 +85,7 @@ def get_album_data(artist_id, access_token, number_of_albums):
 
         # Get items from response_data
         items = response_data.get("items", [])
-        print(items)
+
         if items:
             for item in items:
                 album_name = item.get("name", "")
@@ -93,6 +93,7 @@ def get_album_data(artist_id, access_token, number_of_albums):
                 if len(album_name) > 28:
                     album_name = f"{album_name[0:28]}.."
                 clean_artist_albums.append({
+                    "album_id": item.get("id", 0),
                     "image": item.get("images", [])[1].get("url", ""),
                     "name": album_name,
                     "release_date": item.get("release_date", ""),

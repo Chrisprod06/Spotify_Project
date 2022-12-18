@@ -126,3 +126,17 @@ def view_artist_albums(request, artist_id, number_of_albums):
         template,
         context
     )
+
+
+def view_album_tracks(request, album_id):
+    """
+    View to handle album tracks retrieval and display.
+    :param request:
+    :param album_id:
+    :return:
+    """
+    template = "spotify_api_interface/album_tracks.html"
+    context = {}
+    access_token = auth_spotify()
+
+    # Get album tracks

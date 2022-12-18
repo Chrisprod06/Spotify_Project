@@ -15,7 +15,7 @@
                             <ul class="list-group text-center">
                                 <li class="list-group-item"><b>{{ album.name }}</b></li>
                                 <li class="list-group-item">{{ album.release_date }}</li>
-                                <li class="list-group-item"><a href="#">View {{ album.total_tracks }} Tracks</a></li>
+                                <li class="list-group-item"><a href="{% url 'view-album-tracks' 'album.album_id' %}">View {{ album.total_tracks }} Tracks</a></li>
 
                             </ul>
                         </div>
