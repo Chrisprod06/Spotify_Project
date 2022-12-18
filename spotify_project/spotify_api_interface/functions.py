@@ -108,3 +108,29 @@ def get_album_data(artist_id, access_token, number_of_albums):
     except Exception as error:
         print(f"GET artist albums API error: {error}")
     return clean_artist_albums
+
+
+def get_album_tracks(album_id, access_token):
+    """
+    Function to get tracks of requested album
+    :param album_id:
+    :param access_token:
+    :return:
+    """
+    try:
+        url = f"https://api.spotify.com/v1/albums/{album_id}/tracks"
+        headers = {
+            "Authorization": f"Bearer {access_token}"
+        }
+
+        response = httpx.get(url, headers=headers, )
+        response_data = response.json()
+
+        # Clean data
+
+    except httpx.TimeoutException as error:
+        print(f"GET artist albums API timeout error: {error}")
+    except httpx.NetworkError as error:
+        print(f"GET artist albums API network error: {error}")
+    except Exception as error:
+        print(f"GET artist albums API error: {error}")

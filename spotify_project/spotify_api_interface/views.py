@@ -3,7 +3,7 @@ import httpx
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
-from .functions import auth_spotify, get_artist_data, get_album_data
+from .functions import auth_spotify, get_artist_data, get_album_data, get_album_tracks
 from .forms import SearchArtistForm, SearchAlbumsForm
 
 
@@ -140,3 +140,12 @@ def view_album_tracks(request, album_id):
     access_token = auth_spotify()
 
     # Get album tracks
+    album_tracks = get_album_tracks(album_id, access_token)
+
+    # Prepare data for template
+    context["album_tracks"] = album_tracks
+    return render(
+        request,
+        template,
+        context
+    )
