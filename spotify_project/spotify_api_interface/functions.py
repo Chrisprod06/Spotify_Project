@@ -125,8 +125,19 @@ def get_album_tracks(album_id, access_token):
 
         response = httpx.get(url, headers=headers, )
         response_data = response.json()
-
         # Clean data
+        clean_album_tracks = []
+        items = response_data.get("items", "")
+        print(items[0])
+        if items:
+            for item in items:
+                clean_album_tracks.append({
+                    "disc_number": item.get("disc_number", 0),
+                    "duration": item.get("duration", 0),
+                    "explicit": item.get("explicit", False),
+                    "spotify_url": ""
+                })
+
 
     except httpx.TimeoutException as error:
         print(f"GET artist albums API timeout error: {error}")
