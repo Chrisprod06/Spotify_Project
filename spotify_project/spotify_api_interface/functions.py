@@ -128,7 +128,7 @@ def get_album_tracks(album_id, access_token):
         response_data = response.json()
         # Clean data
         items = response_data.get("items", "")
-
+        print(items[0])
         if items:
             for item in items:
                 clean_album_tracks.append({
